@@ -5,7 +5,7 @@ import java.util.Observable;
 
 
 /** The state of a game of 2048.
- *  @author TODO: YOUR NAME HERE
+ *  @author shuihong
  */
 public class Model extends Observable {
     /** Current contents of the board. */
@@ -106,20 +106,73 @@ public class Model extends Observable {
      *    value, then the leading two tiles in the direction of motion merge,
      *    and the trailing tile does not.
      * */
+//    public boolean tilt(Side side) {
+//        boolean changed;
+//        changed = false;
+//
+//        // TODO: Modify this.board (and perhaps this.score) to account
+//        // for the tilt to the Side SIDE. If the board changed, set the
+//        // changed local variable to true.
+//        for(int c=0;c<this.board.size();c+=1)
+//            for (int r = 0; r < this.board.size(); r += 1) {
+//
+//            }
+//
+//        checkGameOver();
+//        if (changed) {
+//            setChanged();
+//        }
+//        return changed;
+//    }
     public boolean tilt(Side side) {
-        boolean changed;
-        changed = false;
+        board.setViewingPerspective(side);
+        boolean changed = false;
 
-        // TODO: Modify this.board (and perhaps this.score) to account
-        // for the tilt to the Side SIDE. If the board changed, set the
-        // changed local variable to true.
-
-        checkGameOver();
-        if (changed) {
-            setChanged();
+        for (int col = 0; col < board.size(); col++) {
+            boolean colChanged = tiltColumnUp(col);
+            changed |= colChanged;
         }
+
+        board.setViewingPerspective(Side.NORTH);
+        if (changed) setChanged();
+        checkGameOver();
         return changed;
     }
+
+    private boolean tiltColumnUp(int col) {
+        boolean changed = false;
+        int topRow = board.size() - 1;
+        int mergeLimit = topRow + 1;  // prevent double merging
+        for (int row = topRow - 1; row >= 0; row--) {
+            Tile t = board.tile(col, row);
+            if (t == null) continue;
+
+            int target = row;
+            for (int dest = row + 1; dest <= topRow; dest++) {
+                Tile above = board.tile(col, dest);
+                if (above == null) {
+                    target = dest;
+                } else if (above.value() == t.value() && dest < mergeLimit) {
+                    target = dest;
+                    break;
+                } else {
+                    break;
+                }
+            }
+
+            if (target != row) {
+                boolean merged = board.move(col, target, t);
+                if (merged) {
+                    score += board.tile(col, target).value();
+                    mergeLimit = target;  // prevent further merges at this row
+                }
+                changed = true;
+            }
+        }
+
+        return changed;
+    }
+
 
     /** Checks if the game is over and sets the gameOver variable
      *  appropriately.
@@ -138,6 +191,13 @@ public class Model extends Observable {
      * */
     public static boolean emptySpaceExists(Board b) {
         // TODO: Fill in this function.
+        for(int i=0;i<b.size();i+=1) {
+            for (int j = 0; j < b.size(); j += 1) {
+                if (b.tile(i, j)==null) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -148,6 +208,12 @@ public class Model extends Observable {
      */
     public static boolean maxTileExists(Board b) {
         // TODO: Fill in this function.
+
+        for(int i=0;i<b.size();i+=1) {
+            for(int j = 0; j < b.size(); j += 1) {
+                    if((b.tile(i,j) !=null) && b.tile(i,j).value() == MAX_PIECE ) return true;
+                }
+            }
         return false;
     }
 
@@ -159,6 +225,30 @@ public class Model extends Observable {
      */
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
+        if (emptySpaceExists(b)) {
+            return true;
+        }
+
+        // Case 2: Check for adjacent equal tiles (up, down, left, right)
+        int size = b.size();
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                Tile current = b.tile(i, j);
+                int currentValue = current.value();
+                if (i + 1 < size) {
+                    Tile right = b.tile(i + 1, j);
+                    if (right != null && right.value() == currentValue) {
+                        return true;
+                    }
+                }
+                if (j + 1 < size) {
+                    Tile down = b.tile(i, j + 1);
+                    if (down != null && down.value() == currentValue) {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 

@@ -7,7 +7,7 @@ import ucb.util.CommandArgs;
 /** The main class for the 2048 game.
  *  @author P. N. Hilfinger
  */
-public class Main {
+public class  Main {
 
     /** Number of squares on the side of a board. */
     static final int BOARD_SIZE = 4;
