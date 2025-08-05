@@ -8,6 +8,11 @@ public class Flik {
      *  @param b Value 2
      *  @return Whether a and b are the same */
     public static boolean isSameNumber(Integer a, Integer b) {
-        return a == b;
+        return a.equals(b);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 }
