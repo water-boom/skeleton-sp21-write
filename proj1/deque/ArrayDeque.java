@@ -3,7 +3,7 @@ package deque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ArrayDeque<T> implements Deque<T> {
+public class ArrayDeque<T> implements Deque<T>,Iterable<T> {
     private T[] items;
     private int size;
     private int nextFirst;
@@ -112,7 +112,7 @@ public class ArrayDeque<T> implements Deque<T> {
         }
         System.out.println();
     }
-
+    @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {
             private int pos = 0;
