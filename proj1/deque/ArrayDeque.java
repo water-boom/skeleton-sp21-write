@@ -1,13 +1,21 @@
 package deque;
-
-public class ArrayDeque<T> {
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+public class ArrayDeque<T> implements Deque<T>{
     T[] items;
     int size;
+    public void printDeque(){
+        for (int i = 0; i < size; i++) {
+            System.out.print(items[i] + " ");
+        }
+        System.out.println();
+    }
 
     public ArrayDeque(){
         items = (T[]) new Object[8];
         size = 0;
     }
+
     public void resize(int capacity){
         T[] newItems = (T[]) new Object[capacity];
         if (size >= 0) System.arraycopy(items, 0, newItems, 0, size);
@@ -76,5 +84,22 @@ public class ArrayDeque<T> {
 
     public boolean isEmpty(){
         return size ==0;
+    }
+
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+            private int pos = 0;
+            @Override
+            public boolean hasNext() {
+                return pos < size;
+            }
+            @Override
+            public T next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                return items[pos++];
+            }
+        };
     }
 }
