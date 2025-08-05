@@ -9,7 +9,7 @@ public class MaxArrayDeque<T> extends ArrayDeque<T> {
     public T max() {
         if (isEmpty()) return null;
         // If no comparator is provided, use natural ordering
-        T maxItem = items[0];
+        T maxItem = get(0);
         for (int i = 1; i < size(); i++) {
             T current = get(i);
             if (comparator.compare(current, maxItem) > 0) {

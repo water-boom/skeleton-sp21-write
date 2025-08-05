@@ -14,6 +14,7 @@ public class ArrayDeque<T> {
         items = newItems;
 
     }
+
     public void addFirst(T item){
         if (size == items.length) {
             resize(items.length * 2);
@@ -24,6 +25,7 @@ public class ArrayDeque<T> {
         items[0] = item;
         size++;
     }
+
     public void addLast(T item){
         if (size == items.length) {
             resize(items.length * 2);
@@ -31,6 +33,7 @@ public class ArrayDeque<T> {
         items[size] = item;
         size++;
     }
+
     public T removeFirst(){
         if (isEmpty()) {
             return null;
@@ -46,6 +49,7 @@ public class ArrayDeque<T> {
         }
         return item;
     }
+
     public T removeLast(){
         if (isEmpty()) {
             return null;
@@ -58,15 +62,18 @@ public class ArrayDeque<T> {
         }
         return item;
     }
+
     public T get(int index){
         if (index < 0 || index >= size) {
             return null;
         }
         return items[index];
     }
+
     public int size(){
         return size;
     }
+
     public boolean isEmpty(){
         return size ==0;
     }
