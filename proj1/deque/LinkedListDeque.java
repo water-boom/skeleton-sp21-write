@@ -2,7 +2,7 @@ package deque;
 
 import java.util.Iterator;
 
-public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
+public class LinkedListDeque<T> implements Deque<T>{
     //Node
     private class Node {
         T item;
@@ -119,7 +119,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         }
         System.out.println();
     }
-@Override
+
 public Iterator<T> iterator() {
     return new LinkedListDequeIterator();
 }
