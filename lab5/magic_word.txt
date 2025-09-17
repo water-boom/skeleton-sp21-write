@@ -1,0 +1,51 @@
+你是一个资深后端工程师，请在我的 FastAPI 项目中实现一个 API。
+项目结构：
+- backend/app/main.py (入口)
+- backend/app/routers/geocode.py (API 路由)
+- backend/app/services/geocode.py (业务逻辑)
+- backend/app/models.py (ORM 模型：Batch, GeocodeResult)
+- backend/app/database.py (SQLAlchemy 连接)
+
+需求：
+实现一个新的 FastAPI 路由函数：
+功能：根据 batch_id 查询结果，并支持分页。
+路径：GET /api/results
+参数：
+  - batch_id: int (必填)
+  - limit: int (默认 100)
+返回：
+  - JSON 数组，每个元素包含 [公司名称, lon, lat, status]
+注意事项：
+  - 使用 SQLAlchemy 查询 GeocodeResult
+  - 按 created_at 排序
+  - 代码要直接放到 routers/geocode.py 中
+
+你是一个 React 前端开发工程师，请在我的 React 项目中实现一个组件。
+项目结构：
+- frontend/src/App.jsx (主页面)
+- frontend/src/components/MapView.jsx (地图组件)
+- frontend/src/components/ProgressBar.jsx (进度组件)
+
+需求：
+实现一个 MapView 组件：
+功能：
+  - 接收 props: results (数组，每个元素包含 {company_name, lon, lat})
+  - 使用 react-leaflet 展示点
+  - 点击 marker 时显示公司名称
+地图配置：
+  - 默认中心 [39.9, 116.4]，zoom = 5
+  - 使用 OpenStreetMap 瓦片
+返回：
+  - 一个完整的 React 组件代码
+
+你是一个全栈开发助手，请在以下项目框架下生成代码：
+- 后端：FastAPI + SQLAlchemy + PostgreSQL (PostGIS)
+- 前端：React + Ant Design + Leaflet
+- 功能：批量地理编码，支持上传Excel、进度查询、地图展示、结果下载
+- 数据表：
+  - Batch(id, filename, created_at)
+  - GeocodeResult(id, batch_id, company_name, lon, lat, status, created_at)
+返回的代码要满足：
+  - 遵循项目结构
+  - 模块化清晰
+  - 可以直接复制粘贴使用
