@@ -41,8 +41,8 @@ public class Main {
                 commitFile(commitMsg);
                 break;
             case "rm":
-                String removeFile = args[1];
-                removeStage(removeFile);
+                String removeFileName = args[1];
+                removeStage(removeFileName);
                 break;
             case "log":
                 if (args.length != 1) {
@@ -98,8 +98,7 @@ public class Main {
                 mergeBranch(args[1]);
                 break;
             default:
-                throw new GitletException("No command with that name exists.")
-                break;
+                throw new GitletException("No command with that name exists.");
         }
     }catch (GitletException e) {
             System.err.println(e.getMessage());
