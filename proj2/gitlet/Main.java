@@ -1,107 +1,96 @@
 package gitlet;
-
 import static gitlet.Repository.*;
-import static gitlet.Utils.message;
-import static java.lang.System.exit;
-
+import static gitlet.Stage.*;
+import static gitlet.Commit.*;
+import static gitlet.Branch.*;
 /** Driver class for Gitlet, a subset of the Git version-control system.
- *  @author TODO
  */
 public class Main {
 
     /** Usage: java gitlet.Main ARGS, where ARGS contains
-     *  <COMMAND> <OPERAND1> <OPERAND2> ... 
+     *  <COMMAND> <OPERAND1> <OPERAND2> ...
      */
     public static void main(String[] args) {
         // TODO: what if args is empty?
-        if (args.length == 0) {
-            System.out.println("Please enter a command.");
-            return;
-        }
-
+          if (args.length != 1) {
+              throw new GitletException("Incorrect operands.");
+              return;
+          }
         String firstArg = args[0];
-        try{
-        switch (firstArg) {
+        switch(firstArg) {
             case "init":
                 // TODO: handle the `init` command
                 if (args.length != 1) {
                     throw new GitletException("Incorrect operands.");
                 }
-                initPersistence();
+                init();
                 break;
             case "add":
                 // TODO: handle the `add [filename]` command
                 String addFileName = args[1];
-                addStage(addFileName);
+                add(addFileName);
                 break;
-            // TODO: FILL THE REST IN
-
             case "commit":
-                String commitMsg = args[1];
-                commitFile(commitMsg);
-                break;
+                String commitMessage = args[1];
+                commit(commitMessage);
             case "rm":
-                String removeFileName = args[1];
-                removeStage(removeFileName);
+                String rmFileName = args[1];
+                remove(rmFileName);
                 break;
-            case "log":
-                if (args.length != 1) {
-                    throw new GitletException("Incorrect operands.");
+           case "log":
+               if(args.length != 1) {
+                   throw new GitletException("Incorrect operands.");
+               }
+               log();
+                break;
+           case "global-log":
+                if(args.length != 1) {
+                     throw new GitletException("Incorrect operands.");
+                    }
+                globalLog();
+                break;
+           case "find":
+                String findMessage = args[1];
+                find(findMessage);
+               break;
+           case "status":
+                if(args.length != 1) {
+                     throw new GitletException("Incorrect operands.");
                 }
-                printLog();
-                break;
-            case "global-log":
-                if (args.length != 1) {
-                    throw new GitletException("Incorrect operands.");
-                }
-                printGlobalLog();
-                break;
-            case "find":
-                String findMsg = args[1];
-                findCommit(findMsg);
-                break;
-
-            case "status":
-                if (args.length != 1) {
-                throw new GitletException("Incorrect operands.");
-                }
-                showStatus();
-            break;
-            case "checkout":
-                if (args.length == 1) {
-                    throw new GitletException("Incorrect operands.");
-                }
-                checkOut(args);
-                break;
-            case "branch":
-                if (args.length != 2) {
-                    throw new GitletException("Incorrect operands.");
-                }
-                createBranch(args[1]);
-                break;
-            case "rm-branch":
-                if (args.length != 2) {
-                    throw new GitletException("Incorrect operands.");
+                status();
+               break;
+           case "checkout":
+               if(args.length == 1){
+                     throw new GitletException("Incorrect operands.");
+               }
+               checkOut(args);
+               break;
+           case "branch":
+               if(args.length != 2) {
+                   throw new GitletException("Incorrect operands.");
+               }
+               createBranch(args[1]);
+               break;
+           case "rm-branch":
+                if(args.length != 2) {
+                     throw new GitletException("Incorrect operands.");
                 }
                 removeBranch(args[1]);
-                break;
-            case "reset":
-                if (args.length != 2) {
-                    throw new GitletException("Incorrect operands.");
+               break;
+           case "reset":
+                if(args.length != 2) {
+                     throw new GitletException("Incorrect operands.");
                 }
                 reset(args[1]);
-                break;
-            case "merge":
-                if (args.length != 2) {
-                    throw new GitletException("Incorrect operands.");
+               break;
+           case "merge":
+                if(args.length != 2) {
+                     throw new GitletException("Incorrect operands.");
                 }
-                mergeBranch(args[1]);
-                break;
-            default:
+                merge(args[1]);
+               break;
+           default:
                 throw new GitletException("No command with that name exists.");
-        }
-    }catch (GitletException e) {
-            System.err.println(e.getMessage());
         }
     }
 }
