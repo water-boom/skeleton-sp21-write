@@ -14,7 +14,6 @@ public class Main {
         // TODO: what if args is empty?
           if (args.length != 1) {
               throw new GitletException("Incorrect operands.");
-              return;
           }
         String firstArg = args[0];
         switch(firstArg) {

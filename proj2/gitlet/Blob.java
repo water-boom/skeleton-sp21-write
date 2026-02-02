@@ -33,8 +33,4 @@ public class Blob implements Serializable {
         return blobContent;
     }
 
-    public static void overWriteFileWithBlob(File file, String content) {
-        writeContents(file, content);
-    }
-
 }

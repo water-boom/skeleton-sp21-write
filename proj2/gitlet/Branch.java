@@ -26,10 +26,6 @@ public class Branch {
         return branchName;
     }
 
-    public void checkOut(String[] args) {
-
-    }
-
     public static void createBranch(String branchName) {
         Commit headCommit = getHeadCommit();
         List<String> branchFiles = plainFilenamesIn(HEADS_DIR);
@@ -52,44 +48,6 @@ public class Branch {
         branchFile.delete();
     }
 
-    public static void reset(String commitID) {
-        if (findCommit(commitID) == null) {
-            throw new GitletException("No commit with that id exists.");
-        }
-        Commit headCommit = getHeadCommit();
-        Commit targetCommit = findCommit(commitID);
-        HashMap<String, String> headBlobsMap = headCommit.getHashMap();
-        List<String> UnderFiles = plainFilenamesIn(CWD);
-        if(ExistUnTrackFile(headCommit)) {
-            Set<String> currTrackSet = headCommit.getHashMap().keySet();
-            Set<String> resetTrackSet = targetCommit.getHashMap().keySet();
-            boolean hasAllUntrack = false;
-
-            for(String fileName: UnderFiles) {
-                if(!currTrackSet.contains(fileName) && resetTrackSet.contains(fileName)) {
-                    remove(fileName);
-                    hasAllUntrack = true;
-                    break;
-                }
-            }
-            if(hasAllUntrack) {
-                throw new GitletException("There is an untracked file in the way; delete it, or add and commit it first.");
-            }
-        }
-
-        for(String fileName:UnderFiles){
-            restrictedDelete(join(CWD,fileName));
-        }
-        for(String fileName: targetCommit.getHashMap().keySet()){
-            File workFile = join(CWD, fileName);
-            String blobName = targetCommit.getHashMap().get(fileName);
-            String blobFile = BLOBS_DIR + blobName;
-            String blobContent = getBlobContentFromName(blobFile);
-            writeContents(workFile, blobContent);
-        }
-        saveBreanch(getHeadBranchName(),commitID);
-        setHead(getHeadBranchName(),commitID);
-    }
     public static boolean ExistUnTrackFile(Commit commit) {
         List<String> workFileNames = plainFilenamesIn(CWD);
         Set<String> currTrackSet = commit.getHashMap().keySet();
@@ -99,9 +57,5 @@ public class Branch {
             }
         }
         return false;
-    }
-
-    public static void merge(String branchName) {
-
     }
 }
