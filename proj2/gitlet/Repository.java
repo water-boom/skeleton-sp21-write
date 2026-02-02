@@ -216,10 +216,12 @@ public class Repository {
             restrictedDelete(fileDeleted);
         }
     }
+
     public static String dateToTimeStamp(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z", Locale.US);
         return dateFormat.format(date);
     }
+
     public static void printCommitLog(Commit commit) {
         System.out.println("===");
         System.out.println("commit " + commit.getHashName());
@@ -277,23 +279,34 @@ public class Repository {
             }
             System.out.println(branch);
         }
-        System.out.print("\n");
+        System.out.println();
 
         System.out.println("=== Staged Files ===");
         List<String> addStageFiles = plainFilenamesIn(ADD_STAGE_DIR);
         for (String fileName : addStageFiles) {
             System.out.println(fileName);
         }
-        System.out.print("\n");
+        System.out.println();
 
         System.out.println("=== Removed Files ===");
         List<String> removeStageFiles = plainFilenamesIn(REMOVE_STAGE_DIR);
         for (String fileName : removeStageFiles) {
             System.out.println(fileName);
         }
-        System.out.print("\n");
-
+        System.out.println();
         System.out.println("=== Modifications Not Staged For Commit ===");
+        System.out.println();
+        System.out.println("=== Untracked Files ===");
+        for( String fileName : plainFilenamesIn(CWD)) {
+            Commit headCommit = getHeadCommit();
+            HashMap<String, String> blobMap = headCommit.getBlobMap();
+            List<String> addStageFileNames = plainFilenamesIn(ADD_STAGE_DIR);
+            if (!blobMap.containsKey(fileName)
+                    && !addStageFileNames.contains(fileName)) {
+                System.out.println(fileName);
+            }
+        }
+        System.out.println();
     }
 
     public static void checkOut(String[] args) {
