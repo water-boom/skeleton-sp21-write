@@ -3,7 +3,7 @@ package gitlet;
 import java.io.File;
 import java.io.Serializable;
 
-import static gitlet.Refs.*;
+
 import static gitlet.Repository.*;
 import static gitlet.Utils.*;
 

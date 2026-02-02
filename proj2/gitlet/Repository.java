@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static gitlet.Utils.*;
-import static gitlet.Refs.*;
 import static gitlet.Commit.*;
 import static gitlet.Blob.*;
 import static java.lang.System.exit;
@@ -27,16 +26,22 @@ public class Repository {
      * variable is used. We've provided two examples for you.
      */
 
-    /**
-     * The current working directory.
-     */
     public static final File CWD = new File(System.getProperty("user.dir"));
-    /**
-     * The .gitlet directory.
-     */
+
     public static final File GITLET_DIR = join(CWD, ".gitlet");
 
-    /* TODO: fill in the rest of this class. */
+
+    static final File OBJECTS_FOLDER = join(GITLET_DIR, "objects");
+    static final File COMMIT_FOLDER = join(OBJECTS_FOLDER, "commits");
+    static final File BLOBS_FOLDER = join(OBJECTS_FOLDER, "blobs");
+
+    public static final File REFS_DIR = join(GITLET_DIR, "refs");
+    public static final File HEAD_DIR = join(REFS_DIR, "heads");
+
+    public static final File HEAD_POINT = join(REFS_DIR, "HEAD");
+
+    public static final File ADD_STAGE_DIR = join(GITLET_DIR, "addstage");
+    public static final File REMOVE_STAGE_DIR = join(GITLET_DIR, "removestage");
 
     public static void setupPersistence() {
         GITLET_DIR.mkdirs();
@@ -47,31 +52,38 @@ public class Repository {
         ADD_STAGE_DIR.mkdirs();
         REMOVE_STAGE_DIR.mkdirs();
     }
+    /* TODO: fill in the rest of this class. */
+    public static void saveBranch(String branchName, String hashName) {
+
+        File branchHead = join(HEAD_DIR, branchName);
+        writeContents(branchHead, hashName);
+    }
+
+    public static void saveHEAD(String branchName, String branchHeadCommitHash) {
+        writeContents(HEAD_POINT, branchName + ":" + branchHeadCommitHash);
+    }
+
+    public static String getHeadBranchName() {
+        String headContent = readContentsAsString(HEAD_POINT);
+        String[] splitContent = headContent.split(":");
+        return splitContent[0];
+    }
 
     public static void initPersistence() {
         if (GITLET_DIR.exists()) {
-            System.out.println("A Gitlet version-control "
-                    + "system already exists in the current directory.");
-            exit(0);
+            throw new GitletException("A Gitlet version-control system already exists in the current directory.");
         }
-        // 新建.gitlet及子文件夹
         setupPersistence();
-        // 初始化一个初始的commit
         Date timestampInit = new Date(0);
-        Commit initialCommit = new Commit("initial commit", timestampInit,
-                "", null, null);
+        Commit initialCommit = new Commit("initial commit", timestampInit, "", null, null);
         initialCommit.saveCommit();
-
-        //记录master分支指向的commit
         String commitHashName = initialCommit.getHashName();
         String branchName = "master";
         saveBranch(branchName, commitHashName);
-        // 将此时的HEAD指针指向commit中的代表head的文件
         saveHEAD("master", commitHashName);
     }
 
     public static void addStage(String addFileName) {
-        /* 如果文件名是空 */
         if (addFileName == null || addFileName.isEmpty()) {
             throw new GitletException("Please enter a file name.");
         }
@@ -98,11 +110,11 @@ public class Repository {
                 List<String> filesAdd = plainFilenamesIn(ADD_STAGE_DIR);
                 List<String> filesRm = plainFilenamesIn(REMOVE_STAGE_DIR);
                 /* 如果在暂存区存在,从暂存区删除 */
-                if (filesAdd.contains(addFileName)) {
+                if (filesAdd != null && filesAdd.contains(addFileName)) {
                     join(ADD_STAGE_DIR, addFileName).delete();
                 }
                 /* 如果在removal area存在,从中删除 */
-                if (filesRm.contains(addFileName)) {
+                if (filesRm != null && filesRm.contains(addFileName)) {
                     join(REMOVE_STAGE_DIR, addFileName).delete();
                 }
 
@@ -127,7 +139,7 @@ public class Repository {
         List<String> addStageFiles = plainFilenamesIn(ADD_STAGE_DIR);
         List<String> removeStageFiles = plainFilenamesIn(REMOVE_STAGE_DIR);
         /* 错误的情况，直接返回 */
-        if (addStageFiles.isEmpty() && removeStageFiles.isEmpty()) {
+        if (addStageFiles != null && addStageFiles.isEmpty() && removeStageFiles.isEmpty()) {
             throw new GitletException("No changes added to the commit.");
         }
         if (commitMsg == null || commitMsg.isEmpty()) {
@@ -698,8 +710,7 @@ public class Repository {
                         /* 只存在一方被删除，跳过，从后面单独对HEAD和other指针进行操作 */
                         continue;
                     } else {
-                        if (otherHeadCommitBolbMap.get(splitTrackName)
-                                .equals(headCommitBolbMap.get(splitTrackName))) {
+                        if (otherHeadCommitBolbMap.get(splitTrackName).equals(headCommitBolbMap.get(splitTrackName))) {
                             /* 情况3a 一致的修改 */
                             continue;
                         } else {
