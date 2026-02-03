@@ -4,11 +4,11 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.*;
 
-// TODO: any imports you need here
+
 
 import static gitlet.Repository.*;
 import static gitlet.Utils.*;
-import java.util.Date; // TODO: You'll likely use this in this class
+import java.util.Date;
 
 public class Commit implements Serializable {
 
@@ -37,7 +37,6 @@ public class Commit implements Serializable {
         this.timestamp = parent.timestamp;
         this.parent = parent.parent;
         this.blobMap = parent.blobMap;
-        this.otherParent = parent.otherParent;
     }
 
     public String getHashName() {

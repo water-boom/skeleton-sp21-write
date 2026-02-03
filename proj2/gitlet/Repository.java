@@ -52,6 +52,11 @@ public class Repository {
         ADD_STAGE_DIR.mkdirs();
         REMOVE_STAGE_DIR.mkdirs();
     }
+    public static void checkInitialized() {
+        if (!GITLET_DIR.exists()) {
+            throw new GitletException("Not in an initialized Gitlet directory.");
+        }
+    }
     /* TODO: fill in the rest of this class. */
     public static void saveBranch(String branchName, String hashName) {
 
@@ -431,14 +436,11 @@ public class Repository {
         /* 检测是否有相关Branch */
         File brancheFile = join(HEAD_DIR, branchName);
         if (!brancheFile.exists()) {
-            System.out.println("A branch with that name does not exist.");
-            exit(0);
+            throw new GitletException("A branch with that name does not exist.");
         }
-        /* 检测Branch是否为curr branch */
-        Commit headCommit = getHeadCommit();
-        if (headCommit.equals(branchName)) {
-            System.out.println("Cannot remove the current branch.");
-            exit(0);
+
+        if (getHeadBranchName().equals(branchName)) {
+            throw new GitletException("Cannot remove the current branch.");
         }
         /* 删除这个branch的指针文件 */
         File branchHeadPoint = join(HEAD_DIR, branchName);

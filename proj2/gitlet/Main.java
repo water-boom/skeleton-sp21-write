@@ -29,17 +29,19 @@ public class Main {
 
             case "add":
                 // TODO: handle the `add [filename]` command
+                checkInitialized();
                 String addFileName = args[1];
-
                 addStage(addFileName);
                 break;
 
             case "commit":
+                checkInitialized();
                 String commitMsg = args[1];
                 commitFile(commitMsg);
                 break;
 
             case "status":
+                checkInitialized();
                 if (args.length != 1) {
                     throw new GitletException("Incorrect operands.");
                 }
@@ -47,27 +49,32 @@ public class Main {
                 break;
 
             case "rm":
+                checkInitialized();
                 String removeFileName = args[1];
                 removeStage(removeFileName);
                 break;
             case "log":
+                checkInitialized();
                 if (args.length != 1) {
                     throw new GitletException("Incorrect operands.");
                 }
                 printLog();
                 break;
             case "global-log":
+                checkInitialized();
                 if (args.length != 1) {
                     throw new GitletException("Incorrect operands.");
                 }
                 printGlobalLog();
                 break;
             case "find":
+                checkInitialized();
                 String findMsg = args[1];
                 findCommit(findMsg);
                 break;
 
             case "checkout":
+                checkInitialized();
                 if (args.length == 1) {
                     throw new GitletException("Incorrect operands.");
                 }
@@ -75,6 +82,7 @@ public class Main {
                 break;
 
             case "branch":
+                checkInitialized();
                 if (args.length != 2) {
                     throw new GitletException("Incorrect operands.");
                 }
@@ -82,6 +90,7 @@ public class Main {
                 break;
 
             case "rm-branch":
+                checkInitialized();
                 if (args.length != 2) {
                     throw new GitletException("Incorrect operands.");
                 }
@@ -89,6 +98,7 @@ public class Main {
                 break;
 
             case "reset":
+                checkInitialized();
                 if (args.length != 2) {
                     throw new GitletException("Incorrect operands.");
                 }
@@ -96,6 +106,7 @@ public class Main {
                 break;
 
             case "merge":
+                checkInitialized();
                 if (args.length != 2) {
                     throw new GitletException("Incorrect operands.");
                 }
